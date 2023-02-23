@@ -3,8 +3,21 @@
 require "../../includes/config/database.php";
 $db = conectarBD();
 
+//Consultar para obtener valores
+$consulta = "SELECT * FROM vendedores";
+$resultado = mysqli_query($db, $consulta);
+
 //Mensajes de errores
 $errores = [];
+
+$titulo = "";
+$precio = "";
+$descripcion = "";
+$habitaciones = "";
+$wc = "";
+$estacionamiento = "";
+$vendedores_id = "";
+$creado = date("Y/m/d");
 
 //Ejecutar el codigo dsp de q el usuario envia el formulario
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -45,11 +58,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if (empty($errores)) {
         //Insertar en la BD
-        $query = "INSERT INTO propiedades (titulo, precio, descripcion, habitaciones, wc, estacionamiento, vendedores_id) VALUES ('$titulo','$precio','$descripcion','$habitaciones','$wc','$estacionamiento','$vendedores_id')";
+        $query = "INSERT INTO propiedades (titulo, precio, descripcion, habitaciones, wc, estacionamiento, creado ,vendedores_id) VALUES ('$titulo','$precio','$descripcion','$habitaciones','$wc','$estacionamiento','$creado','$vendedores_id')";
 
         $resultado = mysqli_query($db, $query);
         if ($resultado) {
-            echo "Bien";
+            //Redireccionar al usuario
+            header("Location:/bienesraices/admin/index.php");
         }
     }
 }
@@ -76,16 +90,16 @@ incluirTemplate("header");
             <legend>Informacion General</legend>
 
             <label for="titulo">Titulo</label>
-            <input type="text" name="titulo" placeholder="Titulo Propiedad" id="titulo">
+            <input type="text" name="titulo" placeholder="Titulo Propiedad" id="titulo" value="<?php echo $titulo; ?>">
 
             <label for="precio">Precio</label>
-            <input type="text" name="precio" placeholder="Precio Propiedad" id="precio">
+            <input type="text" name="precio" placeholder="Precio Propiedad" id="precio" value="<?php echo $precio; ?>">
 
             <label for="imagen">Imagen</label>
             <input type="file" id="imagen" accept="image/jpg, image/png">
 
             <label for="textarea">Descripcion</label>
-            <textarea id="textarea" name="descripcion"></textarea>
+            <textarea id="textarea" name="descripcion"> <?php echo $descripcion; ?></textarea>
 
         </fieldset>
 
@@ -93,13 +107,13 @@ incluirTemplate("header");
             <legend>Infomracion Propiedad</legend>
 
             <label for="habitaciones">Habitaciones:</label>
-            <input type="number" placeholder="Ej: 3" id="habitaciones" name="habitaciones" min="1" max="9">
+            <input type="number" placeholder="Ej: 3" id="habitaciones" name="habitaciones" min="1" max="9" value="<?php echo $habitaciones; ?>">
 
             <label for="wc">Baños:</label>
-            <input type="number" name="wc" placeholder="Ej: 3" id="wc" min="1" max="9">
+            <input type="number" name="wc" placeholder="Ej: 3" id="wc" min="1" max="9" value="<?php echo $wc; ?>">
 
             <label for="estacionamiento">Estacionamiento:</label>
-            <input type="number" name="estacionamiento" placeholder="Ej: 3" id="estacionamiento" min="1" max="9">
+            <input type="number" name="estacionamiento" placeholder="Ej: 3" id="estacionamiento" min="1" max="9" value="<?php echo $estacionamiento; ?>">
 
         </fieldset>
 
@@ -107,8 +121,11 @@ incluirTemplate("header");
 
             <legend>Vendedor</legend>
             <select name="vendedor">
-                <option value="1">Franco</option>
-                <option value="2">Luis</option>
+                <option value="">--Seleccione--</option>
+                <?php while ($vendedor = mysqli_fetch_assoc($resultado)) : ?>
+                    <option <?php echo $vendedores_id === $vendedor["id"] ? "selected" : ""; ?> value="<?php echo $vendedor["id"]; ?>"><?php echo $vendedor["nombre"] . " " . $vendedor["apellido"]; ?>
+                    </option>
+                <?php endwhile; ?>
             </select>
 
         </fieldset>

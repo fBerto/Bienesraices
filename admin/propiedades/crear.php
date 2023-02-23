@@ -32,8 +32,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     //Asignar files hacia una variable
     $imagen = $_FILES["imagen"];
-    var_dump($imagen);
-
 
     if (!$titulo) {
         $errores[] = "Añadir titulo";

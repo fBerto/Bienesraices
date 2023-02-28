@@ -1,76 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bienes Raices</title>
-    <link rel="stylesheet" href="build/css/app.css" />
-  </head>
-  <body>
-    <header class="header">
-      <div class="contenedor contenido-header">
-        <div class="barra">
-          <a href="/">
-            <img src="build/img/logo.svg" alt="logo" />
-          </a>
-          <div class="mobile-menu">
-            <img src="build/img/barras.svg" alt="icono meno responsive">
-          </div>
+<?php
+$id = $_GET['id'];
+$id = filter_var($id,FILTER_VALIDATE_INT);
 
-          <div class="derecha">
-            <img src="build/img/dark-mode.svg" class="dark-mode-boton">
-            <nav class="navegacion">
-              <a href="nosotros.html">Nosotros</a>
-              <a href="anuncios.html">Anuncios</a>
-              <a href="blog.html">Blog</a>
-              <a href="contacto.html">Contacto</a>
-            </nav>
-          </div>
-      </div>
-    </header>
-    <main class="contenedor seccion contenido-centrado">
-      <h1>Casa en Venta frente al bosque</h1>
-      <picture>
-        <source srcset="build/img/destacada.webp" type="image/webp" />
-        <source srcset="build/img/destacada.jpg" type="image/jpg" />
-        <img src="build/img/destacada.jpg" alt="anuncio" loading="lazy" />
-      </picture>
-      <div class="resumen-propiedad">
-        <p class="precio">$3,000,000</p>
-        <ul class="iconos-caracteristicas">
-          <li>
-            <img class="icono" src="build/img/icono_wc.svg" alt="icono wc" />
-            <p>3</p>
-          </li>
-          <li>
-            <img class="icono" 
-              src="build/img/icono_estacionamiento.svg"
-              alt="icono estacionamiento"
-            />
-            <p>3</p>
-          </li>
-          <li>
-            <img  class="icono" src="build/img/icono_dormitorio.svg" alt="icono dormitorio" />
-            <p>4</p>
-          </li>
-        </ul>
-        <p>Proin consequat viverra sapien, malesuada tempor tortor feugiat vitae. In dictum felis et nunc aliquet molestie. Proin tristique commodo felis, sed auctor elit auctor pulvinar. Nunc porta, nibh quis convallis sollicitudin, arcu nisl semper mi, vitae sagittis lorem dolor non risus. Vivamus accumsan maximus est, eu mollis mi. Proin id nisl vel odio semper hendrerit. Nunc porta in justo finibus tempor. Suspendisse lobortis dolor quis elit suscipit molestie. Sed condimentum, erat at tempor finibus, urna nisi fermentum est, a dignissim nisi libero vel est. Donec et imperdiet augue. Curabitur malesuada sodales congue. Suspendisse potenti. Ut sit amet convallis nisi.</p>
-        <p>Aliquam lectus magna, luctus vel gravida nec, iaculis ut augue. Praesent ac enim lorem. Quisque ac dignissim sem, non condimentum orci. Morbi a iaculis neque, ac euismod felis. Fusce augue quam, fermentum sed turpis nec, hendrerit dapibus ante. Cras mattis laoreet nibh, quis tincidunt odio fermentum vel. Nulla facilisi.</p>
-      </div>
-    </main>
+if(!$id){
+  header("Location:/bienesraices/index.php");
+}
 
-    <footer class="footer seccion">
-      <div class="contenedor contenido-footer">
-        <nav class="navegacion">
-          <a href="nosotros.html">Nosotros</a>
-          <a href="anuncios.html">Anuncios</a>
-          <a href="blog.html">Blog</a>
-          <a href="contacto.html">Contacto</a>
-        </nav>
-      </div>
-      <p class="copyright">Todos los derechos Reservados 2023 &COPY;</p>
-    </footer>
-    <script src="build/js/bundle.min.js"></script>
-  </body>
-</html>
+//Importar la conexion
+require 'includes/config/database.php';
+$db = conectarBD();
+//Consultar 
+$query = "SELECT * FROM propiedades WHERE id = {$id}";
+//Obetener resultados
+$resultadoConsulta = mysqli_query($db, $query);
+
+if(!$resultadoConsulta -> num_rows){
+  header("Location:/bienesraices/index.php");
+}
+
+$propiedad = mysqli_fetch_assoc($resultadoConsulta);
+
+require "includes/funciones.php";
+incluirTemplate("header");
+
+?>
+<main class="contenedor seccion contenido-centrado">
+  <h1><?php echo $propiedad['titulo']  ;?></h1>
+  <img loading="lazy" src="imagenes/<?php echo $propiedad['imagen'];?>" alt="anuncio">
+  <div class="resumen-propiedad">
+    <p class="precio">$<?php echo $propiedad['precio']  ;?></p>
+    <ul class="iconos-caracteristicas">
+      <li>
+        <img class="icono" src="build/img/icono_wc.svg" alt="icono wc" />
+        <p><?php echo $propiedad['wc']  ;?></p>
+      </li>
+      <li>
+        <img class="icono" src="build/img/icono_estacionamiento.svg" alt="icono estacionamiento" />
+        <p><?php echo $propiedad['estacionamiento']  ;?></p>
+      </li>
+      <li>
+        <img class="icono" src="build/img/icono_dormitorio.svg" alt="icono dormitorio" />
+        <p><?php echo $propiedad['habitaciones']  ;?></p>
+      </li>
+    </ul>
+    <p><?php echo $propiedad['descripcion']  ;?></p>
+  </div>
+</main>   
+
+<?php
+  incluirTemplate("footer");
+  //cerrar conexion
+  mysqli_close($db);
+?>

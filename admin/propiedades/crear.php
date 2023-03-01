@@ -1,5 +1,8 @@
 <?php
-
+require "../../includes/funciones.php";
+if (!estaAutenticado()) {
+    header('Location:/Bienesraices/index.php');
+} 
 require "../../includes/config/database.php";
 $db = conectarBD();
 
@@ -88,8 +91,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 }
-
-require "../../includes/funciones.php";
 incluirTemplate("header");
 ?>
 

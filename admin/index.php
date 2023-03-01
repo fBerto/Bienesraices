@@ -1,4 +1,8 @@
 <?php
+require "../includes/funciones.php";
+if (!estaAutenticado()) {
+    header('Location:/Bienesraices/index.php');
+}
 //Impratar conexion
 require "../includes/config/database.php";
 $db = conectarBD();
@@ -31,7 +35,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 }
 
 //Incluir template
-require "../includes/funciones.php";
+
 incluirTemplate("header");
 ?>
 

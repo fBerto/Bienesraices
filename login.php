@@ -15,6 +15,27 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     if(!$password){
         $errores[] = "El Password es obliogatorio";
     }
+
+    if(empty($errores)){
+        //Revisar si el usuario existe
+        $query = "SELECT * FROM usuarios WHERE email = '{$email}'";
+        $resultado = mysqli_query($db,$query);
+        if($resultado -> num_rows){
+            $usuario = mysqli_fetch_assoc($resultado);
+            //Revisar Password
+            $auth = password_verify($password, $usuario['password']);
+            if ($auth) {
+                session_start();
+                $_SESSION['usuario'] = $usuario['email'];
+                $_SESSION['login'] = true; 
+                header('Location:/bienesraices/admin/index.php');
+            }else{
+                $errores[]='El Password es incorrecto';
+            }
+        }else{
+            $errores[] = 'El usuario no existe';
+        }
+    }
 }
 
 

@@ -1,5 +1,5 @@
 <?php
-require 'includes/config/database.php';
+require "includes/app.php";
 $db = conectarBD();
 
 $errores =[];
@@ -39,7 +39,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
 }
 
 
-require "includes/funciones.php";
+
 incluirTemplate("header");
 ?>
 

@@ -1,9 +1,10 @@
 <?php
-require "../../includes/funciones.php";
-if (!estaAutenticado()) {
-    header('Location:/Bienesraices/index.php');
-} 
-require "../../includes/config/database.php";
+require "../../includes/app.php";
+
+use App\Propiedad;
+
+estaAutenticado();
+
 $db = conectarBD();
 
 //Consultar para obtener valores

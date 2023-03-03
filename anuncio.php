@@ -7,7 +7,7 @@ if(!$id){
 }
 
 //Importar la conexion
-require 'includes/config/database.php';
+require "includes/app.php";
 $db = conectarBD();
 //Consultar 
 $query = "SELECT * FROM propiedades WHERE id = {$id}";
@@ -20,7 +20,7 @@ if(!$resultadoConsulta -> num_rows){
 
 $propiedad = mysqli_fetch_assoc($resultadoConsulta);
 
-require "includes/funciones.php";
+
 incluirTemplate("header");
 
 ?>

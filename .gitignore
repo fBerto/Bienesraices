@@ -107,3 +107,5 @@ imagenes/6acc8b3b48906e86c429385c85485dcf.jpg
 imagenes/ac197bb048891c731676dde78652e934.jpg
 imagenes/f5515725832d4b3c6eb7ed05b363c26d.jpg
 *.jpg
+
+/vendor/
